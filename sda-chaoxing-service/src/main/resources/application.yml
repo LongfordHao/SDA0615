@@ -1,0 +1,34 @@
+server:
+  port: 8002
+
+#mybatis配置
+mybatis:
+  type-aliases-package: com.tfjy.sda.bean
+  config-location: classpath:mybatis/mybatis-config.xml
+  mapper-locations: classpath:mybatis/mapper/*.xml
+
+
+#spring的配置
+spring:
+  application:
+    name: chaoxing-Service
+  datasource:
+    type:
+    driver-class-name: com.mysql.jdbc.Driver
+    url: jdbc:mysql://d-mysql.fjybj.cn:3306/sda_dev?useSSL=false&characterEncoding=UTF-8&serverTimezone=Asia/Shanghai
+    username: sda
+    password: sda
+
+#Eureka的配置，服务注册到哪里
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:7001/eureka/
+#  instance:
+#    instance-id: BiliService # 修改eureka上的默认描述信息！
+
+
+#info配置
+info:
+  app.name: ChaoxingService
+  company.name: www.zxja.com

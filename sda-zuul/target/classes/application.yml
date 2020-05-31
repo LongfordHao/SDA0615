@@ -1,0 +1,34 @@
+server:
+  port: 9527
+
+spring:
+  application:
+    name: sda-zuul
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:7001/eureka/
+  instance:
+    instance-id: zuul
+    prefer-ip-address: true
+
+
+info:
+  app.name: sda-zuul
+  company.name: www.zxja.com
+
+
+#zuul:
+#  routes:
+#    mydept.serviceId: sda-
+#    mydept.path: /mydept/**
+#  ignored-services: "*"  # 不能再使用这个路径访问了，ignored ： 忽略,隐藏全部的~
+#  prefix: /sda # 设置公共的前缀
+zuul:
+  routes:
+    bili:
+      path: /bili/**
+      serviceId: sda-bili-Service
+      custom-sensitive-headers: true
+
