@@ -7,12 +7,12 @@
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <module name="sda-eureka" />
-        <module name="sda-chaoxing-service" />
         <module name="sda-bili-service" />
         <module name="sda-bili-web" />
         <module name="sda-chaoxing-web" />
         <module name="sda-zuul" />
         <module name="sda-lap-service" />
+        <module name="sda-chaoxing-service" />
         <module name="sda-lap-web" />
       </profile>
     </annotationProcessing>

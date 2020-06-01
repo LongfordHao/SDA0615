@@ -17,6 +17,6 @@ info:
 
 
 #开启hystrix降级
-#feign:
-#  hystrix:
-#    enabled: true
+feign:
+  hystrix:
+    enabled: true

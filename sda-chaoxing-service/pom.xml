@@ -49,6 +49,14 @@
             <groupId>mysql</groupId>
             <artifactId>mysql-connector-java</artifactId>
         </dependency>
+        <dependency>
+            <groupId>tk.mybatis</groupId>
+            <artifactId>mapper-spring-boot-starter</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.mybatis</groupId>
+            <artifactId>mybatis</artifactId>
+        </dependency>
         <!--log4j-->
         <dependency>
             <groupId>log4j</groupId>
@@ -59,7 +67,7 @@
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
         </dependency>
-
+        <!--驱动-->
         <dependency>
             <groupId>com.alibaba</groupId>
             <artifactId>druid</artifactId>
