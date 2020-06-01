@@ -16,6 +16,9 @@
         <module>sda-lap-service</module>
         <module>sda-lap-web</module>
         <module>sda-zuul</module>
+        <module>sda-bean</module>
+        <module>sda-interface</module>
+        <module>sda-common-util</module>
     </modules>
 
     <!--打包方式-->

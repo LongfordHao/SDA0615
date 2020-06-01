@@ -12,6 +12,7 @@
     <artifactId>sda-eureka</artifactId>
 
     <dependencies>
+
         <!--spring-Config依赖，后期加入-->
         <dependency>
             <groupId>org.springframework.cloud</groupId>

@@ -15,9 +15,9 @@ spring:
   datasource:
     type:
     driver-class-name: com.mysql.jdbc.Driver
-    url: jdbc:mysql://39.98.33.76:3306/chaoxing?useSSL=false&characterEncoding=UTF-8&serverTimezone=Asia/Shanghai
-    username: root
-    password: wtt666
+    url: jdbc:mysql://d-mysql.fjybj.cn:3306/sda_dev?useSSL=false&characterEncoding=UTF-8&serverTimezone=Asia/Shanghai
+    username: sda
+    password: sda
 
 #Eureka的配置，服务注册到哪里
 eureka:

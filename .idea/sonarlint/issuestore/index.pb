@@ -37,3 +37,5 @@ G
 pom.xml,4\4\442292b8a7efeabbe4cc176709b833b1792140ec
 L
 sda-chaoxing-service/pom.xml,a\5\a569e91055bed393ec3cd035ad76e450657dccc3
+r
+Bsda-chaoxing-service/src/main/resources/mybatis/mybatis-config.xml,c\d\cda85234d059472e845b75ef88e2543e5ad7986f

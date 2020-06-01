@@ -2,11 +2,14 @@
 <project version="4">
   <component name="Encoding">
     <file url="file://$PROJECT_DIR$" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/sda-bean" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/sda-bili-service" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/sda-bili-web" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/sda-chaoxing-service" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/sda-chaoxing-web" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/sda-common-util" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/sda-eureka" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/sda-interface" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/sda-lap-service" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/sda-lap-web" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/sda-zuul" charset="UTF-8" />
