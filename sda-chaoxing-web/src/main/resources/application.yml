@@ -4,6 +4,8 @@ server:
 spring:
   application:
     name: chaoxing-web
+  main:
+    allow-bean-definition-overriding: true
 #eureka配置
 eureka:
   client:
@@ -17,6 +19,11 @@ info:
 
 
 #开启hystrix降级
-#feign:
-#  hystrix:
-#    enabled: true
+feign:
+  hystrix:
+    enabled: true
+
+logging:
+  level:
+    #feign日志以哪个级别监控哪个接口
+    com.tfjy.sda.service.TopicFeignService: debug

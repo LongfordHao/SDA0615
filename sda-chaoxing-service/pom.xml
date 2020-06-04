@@ -12,6 +12,12 @@
     <artifactId>sda-chaoxing-service</artifactId>
 
     <dependencies>
+        <!--common-util-->
+        <dependency>
+            <groupId>com.tfjy.sda</groupId>
+            <artifactId>sda-common-util</artifactId>
+            <version>1.0-SNAPSHOT</version>
+        </dependency>
         <!--sda-interface-->
         <dependency>
             <groupId>com.tfjy.sda</groupId>
