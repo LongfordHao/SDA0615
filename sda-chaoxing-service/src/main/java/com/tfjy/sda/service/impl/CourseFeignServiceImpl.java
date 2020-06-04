@@ -1,61 +1,36 @@
 package com.tfjy.sda.service.impl;
-import com.google.common.collect.Lists;
 
-/*
- * @ClassName: TopicServiceImpl
- * @description TODO
- * @Version:V1.0
- * @author: 张兴军
- * @date: 2020/6/1 21:04
- */
-
-import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
-import com.netflix.hystrix.contrib.javanica.annotation.HystrixProperty;
+import cn.hutool.core.util.IdUtil;
 import com.tfjy.sda.Course;
-import com.tfjy.sda.Topic;
-import com.tfjy.sda.mapper.TopicMapper;
-import com.tfjy.sda.service.TopicFeignService;
+import com.tfjy.sda.mapper.CourseMapper;
+import com.tfjy.sda.service.CourseFeignService;
 import com.tfjy.sda.util.PropertiesUtil;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import org.openqa.selenium.By;
-import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import tk.mybatis.mapper.entity.Example;
 
 import java.util.List;
+/*
+ * @ClassName: CourseFeignServiceImpl
+ * @description TODO
+ * @Version:V1.0
+ * @author: 张兴军
+ * @date: 2020/6/4 17:10
+ */
 
 
 @Service
-public class TopicFeignServiceImpl implements TopicFeignService {
+public class CourseFeignServiceImpl implements CourseFeignService {
+
     @Autowired
-    private TopicMapper topicMapper;
-
-    @Override
-    @HystrixCommand(fallbackMethod = "timeOutHandler",commandProperties = {
-            @HystrixProperty(name="execution.isolation.thread.timeoutInMilliseconds",value = "3000")
-            //三秒以内，服务正常。超时设置
-    })
-    public List<Topic> queryAll() {
-//        try{
-//            TimeUnit.MILLISECONDS.sleep(Long.parseLong("5000"));
-//        }
-//        catch (InterruptedException e){
-//            e.printStackTrace();
-//        }
-
-        return topicMapper.selectAll();
-    }
-
-    @Override
-    public String queryTest() {
-        //String s = topicMapper.selectAll().toString();
-        return "成功了，O(∩_∩)O ";
-    }
+    private CourseMapper courseMapper;
     /*
      * @Description //TODO 学习通登录方法
      * @param:
@@ -63,13 +38,13 @@ public class TopicFeignServiceImpl implements TopicFeignService {
      * @author: 张兴军
      * @date: 2020/6/2 15:39
      */
-
     @Override
     public ChromeDriver login() {
         //初始化浏览器
         ChromeDriver chromeDriver = new ChromeDriver();
         //打开网页
-        chromeDriver.get("https://passport2.chaoxing.com/login?fid=&newversion=true&refer=http%3A%2F%2Fi.chaoxing.com");
+        String login = PropertiesUtil.getValue("chaoxing.login");
+        chromeDriver.get(login);
 
         try {
             //输入账号
@@ -86,7 +61,7 @@ public class TopicFeignServiceImpl implements TopicFeignService {
             WebElement loginBtn = chromeDriver.findElement(By.id("loginBtn"));
             loginBtn.click();
             Thread.sleep(2000);
-           return chromeDriver;
+            return chromeDriver;
 
 
         } catch (InterruptedException e) {
@@ -95,17 +70,15 @@ public class TopicFeignServiceImpl implements TopicFeignService {
         return chromeDriver;
     }
 
-
     /*
-     * @Description //TODO  登录老师端首页
+     * @Description //TODO  获取课程首页信息
      * @param:
      * @return:
      * @author: 张兴军
      * @date: 2020/6/4 14:49
      */
-
     @Override
-    public void homePage(){
+    public void homePage() {
         ChromeDriver driver = login();
         String curriculumUrl = PropertiesUtil.getValue("curriculum.url");
         //进入首页
@@ -133,35 +106,30 @@ public class TopicFeignServiceImpl implements TopicFeignService {
                     String courseTeacher = elementli.select("p").first().text();
                     System.out.println(courseTeacher);
                     //课程备注
-                    String exlain = elementli.select("p").select("p[^title]").text();
-                    System.out.println(exlain);
+                    String CourseExplain = elementli.select("p").select("p[^title]").text();
+                    System.out.println(CourseExplain);
 
                     //查询数据库是否存在该课程
-                    Course course = new Course();
-                    course.setCourseName(courseName);
-
+                    Example example = new Example(Course.class);
+                     example.createCriteria().andEqualTo("courseName", courseName);
+//                    criteria.andEqualTo("courseName",courseName);
+                    int courses = courseMapper.selectCountByExample(example);
+                    if (courses!=0){
+                        System.out.println("该课程已经存在，课程名称："+ courseName);
+                    }else {
+                        //该课程不存在，添加课程
+                        Course course = new Course();
+                        course.setId(IdUtil.randomUUID());
+                        course.setCourseName(courseName);
+                        course.setCourseTeacher(courseTeacher);
+                        course.setCourseExplain(CourseExplain);
+                        course.setCourseUrl(courseUrl);
+                        courseMapper.insert(course);
+                    }
                 }
 
             }
         }
         driver.get("https://mooc1-1.chaoxing.com/course/isNewCourse?courseId=207434064&edit=true&enc=0a8a8cd32f495e43d9d3429e4d3d3336&v=0");
-    }
-
-    public List<Topic> timeOutHandler(){
-        List<Topic> topiclist=Lists.newArrayList();
-        return topiclist;
-    }
-    //========================服务熔断
-    @HystrixCommand(fallbackMethod = "CiruitBreakerFallback",commandProperties = {
-            @HystrixProperty(name="circuitBreaker.enable",value = "true"),//是否开启断路器
-            @HystrixProperty(name="circuitBreaker.requestVolumeThreshold",value = "10"),//请求次数
-            @HystrixProperty(name="circuitBreaker.sleepWindowInMilliseconds",value = "10000"),//时间窗口期
-            @HystrixProperty(name="circuitBreaker.errorThresholdPercentage",value = "60"),//失败率到达多少跳闸
-    })
-    public String CiruitBreaker(){
-        return  Thread.currentThread().getName();
-    }
-    public String CiruitBreakerFallback(){
-        return "服务熔断出错，请稍后重试";
     }
 }

@@ -5,23 +5,24 @@ import lombok.Data;
 import javax.persistence.Column;
 import javax.persistence.Id;
 import java.io.Serializable;
-
 /*
- * @ClassName: Topic
+ * @ClassName: CourseExercise
  * @description TODO
  * @Version:V1.0
  * @author: 张兴军
- * @date: 2020/6/1 14:36
+ * @date: 2020/6/4 20:23
  */
+
+
 @Data
-public class Topic implements Serializable {
+public class CourseExercise implements Serializable {
     @Id
     @Column
     private String Id;
     @Column
-    private String teacherName;
+    private String topicUrl;
     @Column
-    private String topicContent;
+    private String taskUrl;
     @Column
-    private String topicTime;
+    private String courseId;
 }

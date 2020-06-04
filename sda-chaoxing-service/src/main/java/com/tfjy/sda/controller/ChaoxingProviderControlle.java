@@ -1,11 +1,11 @@
 package com.tfjy.sda.controller;
 import com.tfjy.sda.Topic;
+import com.tfjy.sda.service.CourseExerciseService;
+import com.tfjy.sda.service.CourseFeignService;
 import com.tfjy.sda.service.TopicFeignService;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import javax.annotation.Resource;
-import javax.swing.text.Document;
 import java.util.List;
 
 /*
@@ -21,6 +21,10 @@ import java.util.List;
 public class ChaoxingProviderControlle {
     @Resource
     private TopicFeignService topicFeignService;
+    @Resource
+    private CourseFeignService courseFeignService;
+    @Resource
+    private CourseExerciseService courseExerciseService;
     @RequestMapping("/all")
     public List<Topic> queryAll(){
        return topicFeignService.queryAll();
@@ -31,10 +35,14 @@ public class ChaoxingProviderControlle {
     }
     @RequestMapping("/login")
     public void login(){
-           topicFeignService.login();
+        courseFeignService.login();
     }
     @RequestMapping("/home")
     public void homePage(){
-        topicFeignService.homePage();
+        courseFeignService.homePage();
+    }
+    @RequestMapping("/exercise")
+    public void  getexercise(){
+        courseExerciseService.getexercise();
     }
 }
