@@ -22,11 +22,11 @@ public class TopicList implements Serializable {
     @Column
     private String topicName;
     @Column
-    private String topicConetnt;
+    private String topicContent;
     @Column
     private String topicTime;
     @Column
     private String topicUrl;
     @Column
-    private String topicId;
+    private String courseId;
 }

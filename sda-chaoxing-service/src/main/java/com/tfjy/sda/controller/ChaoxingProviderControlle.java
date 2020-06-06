@@ -50,6 +50,10 @@ public class ChaoxingProviderControlle {
     }
     @RequestMapping("/topicList")
     public void  getTopicList(){
-        topicListService.getTopicList();
+        try {
+            topicListService.getTopicList();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
     }
 }

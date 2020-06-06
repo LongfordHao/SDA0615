@@ -1,7 +1,11 @@
 package com.tfjy.sda.service.impl;
 
+import cn.hutool.core.util.IdUtil;
+import com.tfjy.sda.Course;
 import com.tfjy.sda.CourseExercise;
+import com.tfjy.sda.TopicList;
 import com.tfjy.sda.mapper.CourseExerciseMapper;
+import com.tfjy.sda.mapper.CourseMapper;
 import com.tfjy.sda.mapper.TopicListMapper;
 import com.tfjy.sda.service.CourseFeignService;
 import com.tfjy.sda.service.TopicListService;
@@ -16,6 +20,7 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import tk.mybatis.mapper.entity.Example;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -37,7 +42,7 @@ public class TopicListServiceImpl implements TopicListService {
     @Autowired
     private CourseExerciseMapper courseExerciseMapper;
     @Override
-    public void getTopicList(){
+    public void getTopicList()  throws InterruptedException{
         //调用登录方法
         ChromeDriver driver=courseFeignService.login();
         //查询所有课程中讨论列表的相关html地址
@@ -47,6 +52,7 @@ public class TopicListServiceImpl implements TopicListService {
 
             //获取讨论html地址
             String courseExerciseUrl=courseExercise.getTopicUrl();
+            String courseId=courseExercise.getCourseId();
             System.out.println("+++++++++"+courseExerciseUrl+"+++++++++++");
             //打开HTML地址
             driver.get(courseExerciseUrl);
@@ -57,11 +63,23 @@ public class TopicListServiceImpl implements TopicListService {
             By allMore=new By.ByXPath("//*[@id=\"getMoreTopic\"]");
             //判断是否有查看更多按钮
             if (ElementUtil.check(driver,allMore)){
-                WebElement allMoreclick = driver.findElement(By.id("getMoreTopic"));
-                //点击按钮
-                allMoreclick.click();
-                //下拉到页面底部
-                ((JavascriptExecutor) driver).executeScript("window.scrollTo(0,document.body.scrollHeight)");
+
+               int j=2;
+                for (int i = 0; i <j ; i++) {
+                    if (ElementUtil.check(driver,allMore)){
+                    WebElement allMoreclick = driver.findElement(By.id("getMoreTopic"));
+                    //点击按钮
+                    allMoreclick.click();
+                    //下拉到页面底部
+                    ((JavascriptExecutor) driver).executeScript("window.scrollTo(0,document.body.scrollHeight)");
+                     allMore=new By.ByXPath("//*[@id=\"getMoreTopic\"]");
+                    }else {
+                        break;
+                    }
+                    //if (ElementUtil.check(driver,allMore)){
+                    //    j+=1;
+                    //}
+                }
             }else {
                 //下拉到页面底部
                 ((JavascriptExecutor) driver).executeScript("window.scrollTo(0,document.body.scrollHeight)");
@@ -88,26 +106,43 @@ public class TopicListServiceImpl implements TopicListService {
             for (int j = 0; j < commentList.size(); j++) {
                 //获取讨论主题
                 Elements topic = document.select("#topic_"+commentList.get(j));
+                if (topic.size() !=0){
 
-                //讨论主题发起者
-                String initiator = topic.select(".name").first().text();
-                System.out.println("老师姓名"+initiator);
-                //讨论主题发起时间danwei
-                String time = topic.select(".danwei").first().text();
-                System.out.println("创建时间"+time);
-                //讨论标题
-                String questionerTitle = topic.select("h3").text();
-                System.out.println("讨论内容"+questionerTitle);
-                Elements t=topic.select("div[onclick]");
-                String a= t.get(0).attributes().get("onclick");
-                String[] b=a.split("'");
-                //String b=a.substring(11, a.indexOf("'"));
-                String topicUrl="https://mooc1-1.chaoxing.com/"+b[1];
+                    //讨论主题发起者
+                    String initiator = topic.select(".name").first().text();
 
-                //String onclick=topicUrl.attr("onclick");
+                    //讨论主题发起时间danwei
+                    String time = topic.select(".danwei").first().text();
 
+                    //讨论标题
+                    String questionerTitle = topic.select("h3").text();
 
-                System.out.println("讨论地址"+topicUrl);
+                    //讨论详情跳转地址
+                    Elements t=topic.select("div[onclick]");
+                    String a= t.get(0).attributes().get("onclick");
+                    String[] b=a.split("'");
+                    String topicUrl="https://mooc1-1.chaoxing.com"+b[1];
+
+                    //插入数据库中
+                    Example example=new Example(TopicList.class);
+
+                    example.createCriteria().andEqualTo("topicTime",time);
+                    example.createCriteria().andEqualTo("topicName",questionerTitle);
+                    int exercise=topicListMapper.selectCountByExample(example);
+                    if (exercise !=0){
+                        System.out.println("该讨论已存在"+j);
+                    }else {
+                        TopicList topicList=new TopicList();
+                        topicList.setId(IdUtil.randomUUID());
+                        topicList.setTopicName(questionerTitle);
+                        topicList.setTopicContent(initiator);
+                        topicList.setTopicTime(time);
+                        topicList.setTopicUrl(topicUrl);
+                        topicList.setCourseId(courseId);
+                        topicListMapper.insert(topicList);
+                    }
+                }
+
             }
         }
     }

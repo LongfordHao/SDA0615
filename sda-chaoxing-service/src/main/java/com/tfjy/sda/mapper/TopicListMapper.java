@@ -1,6 +1,7 @@
 package com.tfjy.sda.mapper;
 
 import com.tfjy.sda.TopicList;
+import org.springframework.stereotype.Service;
 import tk.mybatis.mapper.common.Mapper;
 
 /**
@@ -10,5 +11,6 @@ import tk.mybatis.mapper.common.Mapper;
  * Time: 9:49
  * Description:
  */
+@Service
 public interface TopicListMapper extends Mapper<TopicList> {
 }

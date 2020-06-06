@@ -14,5 +14,5 @@ import org.springframework.stereotype.Component;
 @FeignClient(value = "CHAOXING-SERVICE")
 public interface TopicListService {
     //获取讨论列表
-    void getTopicList();
+    void getTopicList() throws InterruptedException;
 }
