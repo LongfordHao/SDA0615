@@ -15,7 +15,7 @@ spring:
   datasource:
     type:
     driver-class-name: com.mysql.jdbc.Driver
-    url: jdbc:mysql://d-mysql.fjybj.cn:3306/sda_dev?useSSL=false&characterEncoding=UTF-8&serverTimezone=Asia/Shanghai
+    url: jdbc:mysql://d-mysql.dmsd.tech:3306/sda_dev?useSSL=false&characterEncoding=UTF-8&serverTimezone=Asia/Shanghai
     username: sda
     password: sda
 

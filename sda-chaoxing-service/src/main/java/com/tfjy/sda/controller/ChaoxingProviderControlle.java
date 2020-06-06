@@ -1,9 +1,6 @@
 package com.tfjy.sda.controller;
 import com.tfjy.sda.Topic;
-import com.tfjy.sda.service.CourseExerciseService;
-import com.tfjy.sda.service.CourseFeignService;
-import com.tfjy.sda.service.TopicFeignService;
-import com.tfjy.sda.service.TopicListService;
+import com.tfjy.sda.service.*;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import javax.annotation.Resource;
@@ -28,6 +25,8 @@ public class ChaoxingProviderControlle {
     private CourseFeignService courseFeignService;
     @Resource
     private CourseExerciseService courseExerciseService;
+    @Resource
+    private TaskListService taskListService;
     @RequestMapping("/all")
     public List<Topic> queryAll(){
        return topicFeignService.queryAll();
@@ -55,5 +54,9 @@ public class ChaoxingProviderControlle {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
+    }
+    @RequestMapping("/taskList")
+    public void getTaskList(){
+        taskListService.getTaskList();
     }
 }

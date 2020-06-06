@@ -106,13 +106,12 @@ public class CourseFeignServiceImpl implements CourseFeignService {
                     String courseTeacher = elementli.select("p").first().text();
                     System.out.println(courseTeacher);
                     //课程备注
-                    String CourseExplain = elementli.select("p").select("p[^title]").text();
-                    System.out.println(CourseExplain);
+                    String courseExplain = elementli.select("p").select("p[^title]").text();
+                    System.out.println(courseExplain);
 
                     //查询数据库是否存在该课程
                     Example example = new Example(Course.class);
-                     example.createCriteria().andEqualTo("courseName", courseName);
-//                    criteria.andEqualTo("courseName",courseName);
+                    example.createCriteria().andEqualTo("courseName", courseName);
                     int courses = courseMapper.selectCountByExample(example);
                     if (courses!=0){
                         System.out.println("该课程已经存在，课程名称："+ courseName);
@@ -122,7 +121,7 @@ public class CourseFeignServiceImpl implements CourseFeignService {
                         course.setId(IdUtil.randomUUID());
                         course.setCourseName(courseName);
                         course.setCourseTeacher(courseTeacher);
-                        course.setCourseExplain(CourseExplain);
+                        course.setCourseExplain(courseExplain);
                         course.setCourseUrl(courseUrl);
                         courseMapper.insert(course);
                     }
@@ -130,6 +129,6 @@ public class CourseFeignServiceImpl implements CourseFeignService {
 
             }
         }
-        driver.get("https://mooc1-1.chaoxing.com/course/isNewCourse?courseId=207434064&edit=true&enc=0a8a8cd32f495e43d9d3429e4d3d3336&v=0");
+        driver.close();
     }
 }

@@ -68,5 +68,6 @@ public class CourseExerciseServiceImpl implements CourseExerciseService {
                 courseExerciseMapper.insert(courseExercise);
             }
         }
+       driver.close();
     }
 }
