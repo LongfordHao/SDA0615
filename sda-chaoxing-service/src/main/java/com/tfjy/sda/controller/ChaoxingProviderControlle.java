@@ -3,6 +3,7 @@ import com.tfjy.sda.Topic;
 import com.tfjy.sda.service.CourseExerciseService;
 import com.tfjy.sda.service.CourseFeignService;
 import com.tfjy.sda.service.TopicFeignService;
+import com.tfjy.sda.service.TopicListService;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import javax.annotation.Resource;
@@ -21,6 +22,8 @@ import java.util.List;
 public class ChaoxingProviderControlle {
     @Resource
     private TopicFeignService topicFeignService;
+    @Resource
+    private TopicListService topicListService;
     @Resource
     private CourseFeignService courseFeignService;
     @Resource
@@ -44,5 +47,9 @@ public class ChaoxingProviderControlle {
     @RequestMapping("/exercise")
     public void  getexercise(){
         courseExerciseService.getexercise();
+    }
+    @RequestMapping("/topicList")
+    public void  getTopicList(){
+        topicListService.getTopicList();
     }
 }
