@@ -83,7 +83,6 @@ public class TaskListServiceImpl implements TaskListService {
                     getTaksList(courseId,document1);
                 }
             }else {
-
                 //不需要分页
                 getTaksList(courseId,document);
             }

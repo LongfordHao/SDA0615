@@ -27,6 +27,8 @@ public class ChaoxingProviderControlle {
     private CourseExerciseService courseExerciseService;
     @Resource
     private TaskListService taskListService;
+    @Resource
+    private TaskStatisticsService taskStatisticsService;
     @RequestMapping("/all")
     public List<Topic> queryAll(){
        return topicFeignService.queryAll();
@@ -58,5 +60,9 @@ public class ChaoxingProviderControlle {
     @RequestMapping("/taskList")
     public void getTaskList(){
         taskListService.getTaskList();
+    }
+    @RequestMapping("task")
+    public void getTask(){
+        taskStatisticsService.getTask();
     }
 }
