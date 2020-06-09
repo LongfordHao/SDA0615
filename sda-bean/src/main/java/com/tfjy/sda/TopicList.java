@@ -29,4 +29,6 @@ public class TopicList implements Serializable {
     private String topicUrl;
     @Column
     private String courseId;
+
+
 }

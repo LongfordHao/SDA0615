@@ -63,28 +63,40 @@ public class TopicListServiceImpl implements TopicListService {
             By allMore=new By.ByXPath("//*[@id=\"getMoreTopic\"]");
             //判断是否有查看更多按钮
             if (ElementUtil.check(driver,allMore)){
-
-               int j=2;
+               int j=1;
+                boolean b=false;
                 for (int i = 0; i <j ; i++) {
-                    if (ElementUtil.check(driver,allMore)){
+                    WebElement element = driver.findElement(By.xpath("/html"));
+                    String html = element.getAttribute("outerHTML");
+                    Document document = Jsoup.parse(html);
+                    Elements clearfix= document.select("a[style=display : none]");
+                    if (b==false){
                     WebElement allMoreclick = driver.findElement(By.id("getMoreTopic"));
                     //点击按钮
                     allMoreclick.click();
                     //下拉到页面底部
                     ((JavascriptExecutor) driver).executeScript("window.scrollTo(0,document.body.scrollHeight)");
-                     allMore=new By.ByXPath("//*[@id=\"getMoreTopic\"]");
+                    element = driver.findElement(By.xpath("/html"));
+                        Thread.sleep(4000);
+                    html = element.getAttribute("outerHTML");
+
+                        document = Jsoup.parse(html);
+                        Elements topic= document.select("#getMoreTopic");
+                        b=topic.attr("style").contains("display: none;");
+                        if (b==false){
+                            j+=1;
+                        }
+                    System.out.println("随便打印点东西");
+
                     }else {
                         break;
                     }
-                    //if (ElementUtil.check(driver,allMore)){
-                    //    j+=1;
-                    //}
+
                 }
             }else {
                 //下拉到页面底部
                 ((JavascriptExecutor) driver).executeScript("window.scrollTo(0,document.body.scrollHeight)");
             }
-
             WebElement element = driver.findElement(By.xpath("/html"));
             String html = element.getAttribute("outerHTML");
             Document document = Jsoup.parse(html);
