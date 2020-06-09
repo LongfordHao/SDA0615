@@ -14,7 +14,6 @@ import tk.mybatis.spring.annotation.MapperScan;
 @SpringBootApplication
 @EnableEurekaClient
 @EnableCircuitBreaker  //服务降级
-//@EnableSwagger2
 @MapperScan(basePackages = "com.tfjy.sda.mapper")
 public class ChaoxingServiceApplication {
     public static void main(String[] args) {

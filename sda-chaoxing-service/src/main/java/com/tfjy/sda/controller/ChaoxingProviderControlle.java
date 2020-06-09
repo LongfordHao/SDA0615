@@ -4,6 +4,7 @@ import com.tfjy.sda.service.*;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import javax.annotation.Resource;
@@ -17,7 +18,7 @@ import java.util.List;
  * @date: 2020/6/1 21:01
  */
 
-@Api(tags = {"学习通模块接口"})
+//@Api(tags = {"学习通模块接口"})
 @RequestMapping(value = "/chaoxing")
 @RestController
 public class ChaoxingProviderControlle {
@@ -42,22 +43,22 @@ public class ChaoxingProviderControlle {
     public String queryTest(){
         return this.topicFeignService.queryTest();
     }
-    @ApiOperation(value = "登录")
+//    @ApiOperation(value = "登录")
     @GetMapping("/login")
     public void login(){
         courseFeignService.login();
     }
-    @ApiOperation(value = "获取首页课程")
+//    @ApiOperation(value = "获取首页课程")
     @GetMapping("/home")
     public void homePage(){
         courseFeignService.homePage();
     }
-    @ApiOperation(value = "获取课程活动")
+//    @ApiOperation(value = "获取课程活动")
     @GetMapping("/exercise")
     public void  getexercise(){
         courseExerciseService.getexercise();
     }
-    @ApiOperation(value = "获取讨论列表")
+//    @ApiOperation(value = "获取讨论列表")
     @GetMapping("/topicList")
     public void  getTopicList(){
         try {
@@ -66,14 +67,15 @@ public class ChaoxingProviderControlle {
             e.printStackTrace();
         }
     }
-    @ApiOperation(value = "获取作业列表")
+//    @ApiOperation(value = "获取作业列表")
     @GetMapping("/taskList")
     public void getTaskList(){
         taskListService.getTaskList();
     }
-    @ApiOperation(value = "获取作业统计")
+//    @ApiOperation(value = "获取作业统计")
     @GetMapping("task")
     public void getTask(){
         taskStatisticsService.getTask();
     }
+
 }

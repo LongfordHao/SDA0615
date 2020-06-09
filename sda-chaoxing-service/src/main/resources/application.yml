@@ -26,7 +26,17 @@ eureka:
       defaultZone: http://localhost:7001/eureka/
 #  instance:
 #    instance-id: BiliService # 修改eureka上的默认描述信息！
-
+xxl:
+  job:
+    admin:
+      addresses: http://d-xxljob.tfjybj.cn/job-admin-dev
+    executor:
+      appname: sda-chaoxing-job
+      ip:
+      port: 9998
+      logpath: /data/xxl-job/jobhandler
+      logretentiondays: -1
+    accessToken:
 
 #info配置
 info:
