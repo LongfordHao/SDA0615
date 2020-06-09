@@ -8,12 +8,13 @@ import org.springframework.cloud.client.circuitbreaker.EnableCircuitBreaker;
 import org.springframework.cloud.netflix.eureka.EnableEurekaClient;
 import org.springframework.cloud.netflix.hystrix.dashboard.EnableHystrixDashboard;
 import org.springframework.context.annotation.Bean;
+import springfox.documentation.swagger2.annotations.EnableSwagger2;
 import tk.mybatis.spring.annotation.MapperScan;
 
 @SpringBootApplication
 @EnableEurekaClient
 @EnableCircuitBreaker  //服务降级
-
+//@EnableSwagger2
 @MapperScan(basePackages = "com.tfjy.sda.mapper")
 public class ChaoxingServiceApplication {
     public static void main(String[] args) {

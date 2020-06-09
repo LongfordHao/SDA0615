@@ -1,6 +1,9 @@
 package com.tfjy.sda.controller;
 import com.tfjy.sda.Topic;
 import com.tfjy.sda.service.*;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import javax.annotation.Resource;
@@ -14,7 +17,8 @@ import java.util.List;
  * @date: 2020/6/1 21:01
  */
 
-
+@Api(tags = {"学习通模块接口"})
+@RequestMapping(value = "/chaoxing")
 @RestController
 public class ChaoxingProviderControlle {
     @Resource
@@ -29,27 +33,32 @@ public class ChaoxingProviderControlle {
     private TaskListService taskListService;
     @Resource
     private TaskStatisticsService taskStatisticsService;
-    @RequestMapping("/all")
+
+    @GetMapping("/all")
     public List<Topic> queryAll(){
        return topicFeignService.queryAll();
     }
-    @RequestMapping("/test")
+    @GetMapping("/test")
     public String queryTest(){
         return this.topicFeignService.queryTest();
     }
-    @RequestMapping("/login")
+    @ApiOperation(value = "登录")
+    @GetMapping("/login")
     public void login(){
         courseFeignService.login();
     }
-    @RequestMapping("/home")
+    @ApiOperation(value = "获取首页课程")
+    @GetMapping("/home")
     public void homePage(){
         courseFeignService.homePage();
     }
-    @RequestMapping("/exercise")
+    @ApiOperation(value = "获取课程活动")
+    @GetMapping("/exercise")
     public void  getexercise(){
         courseExerciseService.getexercise();
     }
-    @RequestMapping("/topicList")
+    @ApiOperation(value = "获取讨论列表")
+    @GetMapping("/topicList")
     public void  getTopicList(){
         try {
             topicListService.getTopicList();
@@ -57,11 +66,13 @@ public class ChaoxingProviderControlle {
             e.printStackTrace();
         }
     }
-    @RequestMapping("/taskList")
+    @ApiOperation(value = "获取作业列表")
+    @GetMapping("/taskList")
     public void getTaskList(){
         taskListService.getTaskList();
     }
-    @RequestMapping("task")
+    @ApiOperation(value = "获取作业统计")
+    @GetMapping("task")
     public void getTask(){
         taskStatisticsService.getTask();
     }
