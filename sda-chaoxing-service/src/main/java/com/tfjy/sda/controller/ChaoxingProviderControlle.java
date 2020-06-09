@@ -1,8 +1,8 @@
 package com.tfjy.sda.controller;
 import com.tfjy.sda.Topic;
 import com.tfjy.sda.service.*;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
+//import io.swagger.annotations.Api;
+//import io.swagger.annotations.ApiOperation;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -34,6 +34,8 @@ public class ChaoxingProviderControlle {
     private TaskListService taskListService;
     @Resource
     private TaskStatisticsService taskStatisticsService;
+    @Resource
+    private TopicDetailListService topicDetailListService;
 
     @GetMapping("/all")
     public List<Topic> queryAll(){
@@ -76,6 +78,15 @@ public class ChaoxingProviderControlle {
     @GetMapping("task")
     public void getTask(){
         taskStatisticsService.getTask();
+    }
+    //@ApiOperation(value="获取讨论话题的问题列表和讨论详情列表")
+    @GetMapping("topicDetailList")
+    private void  getDetailList()  {
+        try {
+            topicDetailListService.getDetailList();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
     }
 
 }
