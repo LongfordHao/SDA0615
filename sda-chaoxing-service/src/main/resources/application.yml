@@ -42,3 +42,10 @@ xxl:
 info:
   app.name: ChaoxingService
   company.name: www.zxja.com
+#权限登录接口
+jurisdiction:
+  loginUrl: http://192.168.60.109:8081/auth-web/access/login
+
+#积分加分接口
+integral:
+  addUrl: http://d-point.dmsd.tech:8118/integral-web/addIntegralController/addIntegralDetail

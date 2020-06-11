@@ -12,6 +12,12 @@
     <artifactId>sda-chaoxing-service</artifactId>
 
     <dependencies>
+        <!--实体类-->
+        <dependency>
+            <groupId>com.tfjy.sda</groupId>
+            <artifactId>sda-bean</artifactId>
+            <version>1.0-SNAPSHOT</version>
+        </dependency>
         <!--common-util-->
         <dependency>
             <groupId>com.tfjy.sda</groupId>
@@ -27,7 +33,7 @@
         <!--feign-->
         <dependency>
             <groupId>org.springframework.cloud</groupId>
-            <artifactId>spring-cloud-starter-feign</artifactId>
+            <artifactId>spring-cloud-starter-openfeign</artifactId>
         </dependency>
         <!--hystrix监控-->
         <dependency>
