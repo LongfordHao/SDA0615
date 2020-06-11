@@ -1,12 +1,13 @@
 package com.tfjy.sda.service.impl;
 
 import cn.hutool.core.util.IdUtil;
-import com.tfjy.sda.TaskList;
-import com.tfjy.sda.TaskStatistics;
+import com.tfjy.sda.bean.TaskList;
+import com.tfjy.sda.bean.TaskStatistics;
+
 import com.tfjy.sda.mapper.TaskListMapper;
 import com.tfjy.sda.mapper.TaskStatisticsMapper;
 import com.tfjy.sda.service.CourseFeignService;
-import com.tfjy.sda.service.TaskListService;
+
 import com.tfjy.sda.service.TaskStatisticsService;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;

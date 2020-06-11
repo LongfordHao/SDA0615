@@ -1,4 +1,4 @@
-package com.tfjy.sda;/*
+package com.tfjy.sda.bean;/*
  * @ClassName: Jurisdiction
  * @description TODO
  * @Version:V1.0

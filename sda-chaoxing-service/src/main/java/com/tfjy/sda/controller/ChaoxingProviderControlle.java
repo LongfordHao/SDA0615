@@ -1,5 +1,6 @@
 package com.tfjy.sda.controller;
-import com.tfjy.sda.Topic;
+
+import com.tfjy.sda.bean.Topic;
 import com.tfjy.sda.service.*;
 //import io.swagger.annotations.Api;
 //import io.swagger.annotations.ApiOperation;

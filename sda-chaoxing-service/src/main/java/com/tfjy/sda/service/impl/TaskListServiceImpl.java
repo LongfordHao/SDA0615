@@ -1,14 +1,14 @@
 package com.tfjy.sda.service.impl;
 
 import cn.hutool.core.util.IdUtil;
-import com.tfjy.sda.CourseExercise;
-import com.tfjy.sda.TaskList;
+
+
+import com.tfjy.sda.bean.CourseExercise;
+import com.tfjy.sda.bean.TaskList;
 import com.tfjy.sda.mapper.CourseExerciseMapper;
 import com.tfjy.sda.mapper.TaskListMapper;
 import com.tfjy.sda.service.CourseFeignService;
 import com.tfjy.sda.service.TaskListService;
-import com.tfjy.sda.util.SpringUtil;
-import com.tfjy.sda.util.StringUtil;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -46,6 +46,7 @@ public class TaskListServiceImpl implements TaskListService {
         ChromeDriver driver = courseFeignService.login();
         //获取所有的课程的作业链接
         List<CourseExercise> courseExercises = courseExerciseMapper.selectAll();
+
         for (CourseExercise courseExercise : courseExercises) {
             //进入课程详情页面
            driver.get( courseExercise.getTaskUrl());

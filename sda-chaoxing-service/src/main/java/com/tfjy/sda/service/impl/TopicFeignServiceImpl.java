@@ -16,9 +16,9 @@ import com.google.common.collect.Lists;
 
 import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
 import com.netflix.hystrix.contrib.javanica.annotation.HystrixProperty;
-import com.tfjy.sda.AddIntegralModel;
-import com.tfjy.sda.Course;
-import com.tfjy.sda.Topic;
+import com.tfjy.sda.bean.AddIntegralModel;
+import com.tfjy.sda.bean.Course;
+import com.tfjy.sda.bean.Topic;
 import com.tfjy.sda.mapper.TopicMapper;
 import com.tfjy.sda.service.TopicFeignService;
 import com.tfjy.sda.util.PropertiesUtil;
@@ -58,7 +58,8 @@ public class TopicFeignServiceImpl implements TopicFeignService {
             //三秒以内，服务正常。超时设置
     })
     public List<Topic> queryAll() {
-        return topicMapper.selectAll();
+        List<Topic> topics = topicMapper.selectAll();
+        return topics;
     }
 
     @Override

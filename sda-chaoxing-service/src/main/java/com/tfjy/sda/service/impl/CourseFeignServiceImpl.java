@@ -1,7 +1,7 @@
 package com.tfjy.sda.service.impl;
 
 import cn.hutool.core.util.IdUtil;
-import com.tfjy.sda.Course;
+import com.tfjy.sda.bean.Course;
 import com.tfjy.sda.mapper.CourseMapper;
 import com.tfjy.sda.service.CourseFeignService;
 import com.tfjy.sda.util.PropertiesUtil;

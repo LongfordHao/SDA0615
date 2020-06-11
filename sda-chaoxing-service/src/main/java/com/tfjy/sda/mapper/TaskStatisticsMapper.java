@@ -1,5 +1,7 @@
 package com.tfjy.sda.mapper;
-import com.tfjy.sda.TaskStatistics;
+
+
+import com.tfjy.sda.bean.TaskStatistics;
 import tk.mybatis.mapper.common.Mapper;
 /*
  * @ClassName: TaskStatisticsMapper

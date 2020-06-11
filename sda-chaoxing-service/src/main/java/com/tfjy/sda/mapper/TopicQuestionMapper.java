@@ -1,7 +1,5 @@
 package com.tfjy.sda.mapper;
-
-import com.tfjy.sda.TopicQuestion;
-import com.tfjy.sda.TopicReply;
+import com.tfjy.sda.bean.TopicQuestion;
 import org.springframework.stereotype.Service;
 import tk.mybatis.mapper.common.Mapper;
 

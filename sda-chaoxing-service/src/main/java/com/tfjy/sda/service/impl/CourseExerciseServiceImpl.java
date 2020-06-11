@@ -10,16 +10,15 @@ package com.tfjy.sda.service.impl;
  */
 
 import cn.hutool.core.util.IdUtil;
-import com.tfjy.sda.Course;
-import com.tfjy.sda.CourseExercise;
+
+
+import com.tfjy.sda.bean.Course;
+import com.tfjy.sda.bean.CourseExercise;
 import com.tfjy.sda.mapper.CourseExerciseMapper;
 import com.tfjy.sda.mapper.CourseMapper;
 import com.tfjy.sda.service.CourseExerciseService;
 import com.tfjy.sda.service.CourseFeignService;
-import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
 import org.openqa.selenium.By;
-import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -42,6 +41,7 @@ public class CourseExerciseServiceImpl implements CourseExerciseService {
         ChromeDriver driver = courseFeignService.login();
         //查询课程表下面的课程URL
         List<Course> courses = courseMapper.selectAll();
+
         for (Course cours : courses) {
             String courseUrl = cours.getCourseUrl();
             driver.get(courseUrl);

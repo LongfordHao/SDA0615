@@ -1,9 +1,9 @@
 package com.tfjy.sda.service.impl;
 
 import cn.hutool.core.util.IdUtil;
-import com.tfjy.sda.TopicList;
-import com.tfjy.sda.TopicQuestion;
-import com.tfjy.sda.TopicReply;
+import com.tfjy.sda.bean.TopicList;
+import com.tfjy.sda.bean.TopicQuestion;
+import com.tfjy.sda.bean.TopicReply;
 import com.tfjy.sda.mapper.TopicDetailListMapper;
 import com.tfjy.sda.mapper.TopicListMapper;
 import com.tfjy.sda.mapper.TopicQuestionMapper;
@@ -177,14 +177,6 @@ public class TopicDetailListServiceImpl implements TopicDetailListService {
                             System.out.println("该条数据已存在"+i);
                         }else {
 
-                            ////创建Example
-                            //Example exampleQ=new Example(TopicQuestion.class);
-                            ////创建criteria
-                            //Example.Criteria criteria=exampleQ.createCriteria();
-                            ////添加条件
-                            //criteria.andEqualTo("questionContent",h3.text());
-                            //查询相对应的问题id
-                            //TopicQuestion topicQuestion= topicQuestionMapper.selectOneByExample(criteria);
                             TopicReply topicReply=new TopicReply();
                             topicReply.setId(IdUtil.randomUUID());
                             topicReply.setQuestionId(topicQuestion.getId());

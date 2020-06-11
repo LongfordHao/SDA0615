@@ -1,6 +1,6 @@
 package com.tfjy.sda.mapper;
 
-import com.tfjy.sda.TopicList;
+import com.tfjy.sda.bean.TopicList;
 import org.springframework.stereotype.Service;
 import tk.mybatis.mapper.common.Mapper;
 

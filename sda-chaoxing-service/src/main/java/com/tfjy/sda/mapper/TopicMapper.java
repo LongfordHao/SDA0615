@@ -1,7 +1,9 @@
 package com.tfjy.sda.mapper;
 
 
-import com.tfjy.sda.Topic;
+
+
+import com.tfjy.sda.bean.Topic;
 import tk.mybatis.mapper.common.Mapper;
 /*
  * @ClassName: TopicMapper

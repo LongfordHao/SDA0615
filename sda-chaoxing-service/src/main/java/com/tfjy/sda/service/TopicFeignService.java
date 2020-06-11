@@ -1,13 +1,11 @@
 package com.tfjy.sda.service;
 
-
-import com.tfjy.sda.Topic;
+import com.tfjy.sda.bean.Topic;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import javax.swing.text.Document;
 import java.util.List;
 
 /*

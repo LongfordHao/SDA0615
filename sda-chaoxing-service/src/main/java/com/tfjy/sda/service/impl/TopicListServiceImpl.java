@@ -1,9 +1,8 @@
 package com.tfjy.sda.service.impl;
 
 import cn.hutool.core.util.IdUtil;
-import com.tfjy.sda.Course;
-import com.tfjy.sda.CourseExercise;
-import com.tfjy.sda.TopicList;
+import com.tfjy.sda.bean.CourseExercise;
+import com.tfjy.sda.bean.TopicList;
 import com.tfjy.sda.mapper.CourseExerciseMapper;
 import com.tfjy.sda.mapper.CourseMapper;
 import com.tfjy.sda.mapper.TopicListMapper;
