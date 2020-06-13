@@ -1,13 +1,12 @@
 package com.tfjy.sda.controller;
 
 import com.tfjy.sda.bean.Topic;
+import com.tfjy.sda.bean.TopicUrlModel;
 import com.tfjy.sda.service.*;
 //import io.swagger.annotations.Api;
 //import io.swagger.annotations.ApiOperation;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
 import javax.annotation.Resource;
 import java.util.List;
 
@@ -39,6 +38,8 @@ public class ChaoxingProviderControlle {
     private TopicDetailListService topicDetailListService;
     @Resource
     private IntegralService integralService;
+    @Resource
+    private TopicIntegralListService topicIntegralListService;
 
     @GetMapping("/all")
     public List<Topic> queryAll(){
@@ -83,7 +84,7 @@ public class ChaoxingProviderControlle {
         taskStatisticsService.getTask();
     }
     //@ApiOperation(value="获取讨论话题的问题列表和讨论详情列表")
-    @GetMapping("topicDetailList")
+    @RequestMapping("topicDetailList")
     private void  getDetailList()  {
         try {
             topicDetailListService.getDetailList();
@@ -95,6 +96,11 @@ public class ChaoxingProviderControlle {
     @GetMapping("integralQuestionAdd")
     public void  integralQuestrionAdd(){
         integralService.getIntegralInto();
+    }
+
+    @PostMapping("queryIntegralList" )
+    public  List queryIntegralList(@RequestBody TopicUrlModel topicUrl){
+        return topicIntegralListService.queryIntegralList(topicUrl);
     }
 
 }
