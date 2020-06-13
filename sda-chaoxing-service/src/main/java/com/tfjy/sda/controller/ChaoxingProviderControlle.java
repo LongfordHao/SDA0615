@@ -37,6 +37,8 @@ public class ChaoxingProviderControlle {
     private TaskStatisticsService taskStatisticsService;
     @Resource
     private TopicDetailListService topicDetailListService;
+    @Resource
+    private IntegralService integralService;
 
     @GetMapping("/all")
     public List<Topic> queryAll(){
@@ -88,6 +90,11 @@ public class ChaoxingProviderControlle {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
+    }
+
+    @GetMapping("integralQuestionAdd")
+    public void  integralQuestrionAdd(){
+        integralService.getIntegralInto();
     }
 
 }
