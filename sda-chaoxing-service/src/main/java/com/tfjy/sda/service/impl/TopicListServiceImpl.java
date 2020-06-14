@@ -1,6 +1,7 @@
 package com.tfjy.sda.service.impl;
 
 import cn.hutool.core.util.IdUtil;
+import com.sun.scenario.effect.impl.sw.sse.SSEBlend_SRC_OUTPeer;
 import com.tfjy.sda.bean.CourseExercise;
 import com.tfjy.sda.bean.TopicList;
 import com.tfjy.sda.mapper.CourseExerciseMapper;
@@ -40,121 +41,142 @@ public class TopicListServiceImpl implements TopicListService {
     private CourseFeignService courseFeignService;
     @Autowired
     private CourseExerciseMapper courseExerciseMapper;
+
     @Override
-    public void getTopicList()  throws InterruptedException{
+    public void getTopicList() throws InterruptedException {
         //调用登录方法
-        ChromeDriver driver=courseFeignService.login();
+        ChromeDriver driver = courseFeignService.login();
+
         //查询所有课程中讨论列表的相关html地址
-        List<CourseExercise> courseExercises=courseExerciseMapper.selectAll();
+        List<CourseExercise> courseExercises = courseExerciseMapper.selectAll();
+
         //循环遍历不同课题下的讨论界面中的讨论题目
-        for (CourseExercise courseExercise:courseExercises){
+        for (CourseExercise courseExercise : courseExercises) {
 
             //获取讨论html地址
-            String courseExerciseUrl=courseExercise.getTopicUrl();
-            String courseId=courseExercise.getCourseId();
-            System.out.println("+++++++++"+courseExerciseUrl+"+++++++++++");
+            String courseExerciseUrl = courseExercise.getTopicUrl();
+
+            String courseId = courseExercise.getCourseId();
+            System.out.println("+++++++++" + courseExerciseUrl + "+++++++++++");
             //打开HTML地址
             driver.get(courseExerciseUrl);
             //页面显示有隐藏的内容，显示隐藏内容
             //点击查看更多
 
             //*[@id="getMoreTopic"]
-            By allMore=new By.ByXPath("//*[@id=\"getMoreTopic\"]");
+            By allMore = new By.ByXPath("//*[@id=\"getMoreTopic\"]");
             //判断是否有查看更多按钮
-            if (ElementUtil.check(driver,allMore)){
-               int j=1;
-                boolean b=false;
-                for (int i = 0; i <j ; i++) {
+            if (ElementUtil.check(driver, allMore)) {
+                int j = 1;
+                boolean b = false;
+                for (int i = 0; i < j; i++) {
                     WebElement element = driver.findElement(By.xpath("/html"));
                     String html = element.getAttribute("outerHTML");
                     Document document = Jsoup.parse(html);
-                    Elements clearfix= document.select("a[style=display : none]");
-                    if (b==false){
-                    WebElement allMoreclick = driver.findElement(By.id("getMoreTopic"));
-                    //点击按钮
-                    allMoreclick.click();
-                    //下拉到页面底部
-                    ((JavascriptExecutor) driver).executeScript("window.scrollTo(0,document.body.scrollHeight)");
-                    element = driver.findElement(By.xpath("/html"));
+                    Elements clearfix = document.select("a[style=display : none]");
+                    if (b == false) {
+                        WebElement allMoreclick = driver.findElement(By.id("getMoreTopic"));
+                        //点击按钮
+                        allMoreclick.click();
+                        //下拉到页面底部
+                        ((JavascriptExecutor) driver).executeScript("window.scrollTo(0,document.body.scrollHeight)");
+                        element = driver.findElement(By.xpath("/html"));
                         Thread.sleep(4000);
-                    html = element.getAttribute("outerHTML");
+                        html = element.getAttribute("outerHTML");
 
                         document = Jsoup.parse(html);
-                        Elements topic= document.select("#getMoreTopic");
-                        b=topic.attr("style").contains("display: none;");
-                        if (b==false){
-                            j+=1;
+                        Elements topic = document.select("#getMoreTopic");
+                        b = topic.attr("style").contains("display: none;");
+                        if (b == false) {
+                            j += 1;
                         }
-                    System.out.println("随便打印点东西");
 
-                    }else {
+                    } else {
                         break;
                     }
 
                 }
-            }else {
+            } else {
                 //下拉到页面底部
                 ((JavascriptExecutor) driver).executeScript("window.scrollTo(0,document.body.scrollHeight)");
             }
-            WebElement element = driver.findElement(By.xpath("/html"));
-            String html = element.getAttribute("outerHTML");
-            Document document = Jsoup.parse(html);
-
-            WebElement elementById = element.findElement(By.xpath("//div[contains(@id,'showTopics')]"));
-            String topicReplys =  elementById.getAttribute("innerHTML");
+            //获取整个页面topic的信息
+            WebElement elementById = driver.findElement(By.xpath("//div[contains(@id,'showTopics')]"));
+            String topicReplys = elementById.getAttribute("innerHTML");
             Document parse = Jsoup.parse(topicReplys);
-            Elements clearfix = parse.select("div");
-            //System.out.println(clearfix);
-            //讨论标题集合，获取页面中讨论列表的topic_id
-            List<String> commentList = new ArrayList<String>();
-            for (Element comment : clearfix) {
-                if (comment.attr("id").contains("topic_")){
-                    //将讨论id放入到讨论数组中
-                    commentList.add(comment.attr("id").replace("topic_",""));
-                }
-            }
-            //提取讨论相关数据
-            for (int j = 0; j < commentList.size(); j++) {
-                //获取讨论主题
-                Elements topic = document.select("#topic_"+commentList.get(j));
-                if (topic.size() !=0){
+            //获取所有讨论的DIV，除去置顶的元素
+            Elements allDiscuss = parse.select(".oneDiv");
+            //判断有没有讨论的内容
+            if (allDiscuss.size() != 0) {
+                for (Element discuss : allDiscuss) {
 
+                    String topicSource = "0";   //讨论的来源如果不显示来源则默认为0
+                    String topicReplyCount = "0";//讨论的回复数量。没有回复默认为0
+                    Elements title = parse.select(".oneTop"); //页面布局中姓名和时间在头部显示
                     //讨论主题发起者
-                    String initiator = topic.select(".name").first().text();
-
+                    String initiator = title.select(".name").first().text();
                     //讨论主题发起时间danwei
-                    String time = topic.select(".danwei").first().text();
-
+                    String time = title.select(".danwei").first().text();
                     //讨论标题
-                    String questionerTitle = topic.select("h3").text();
+                    String questionerTitle = discuss.select("h3").first().text();
+                    //获取详情讨论的链接地址
+                    Elements t = discuss.select("div[onclick]");
+                    String onclick = t.get(0).attributes().get("onclick");
+                    String[] b = onclick.split("'");
+                    String topicUrl = "https://mooc1-1.chaoxing.com" + b[1];
 
-                    //讨论详情跳转地址
-                    Elements t=topic.select("div[onclick]");
-                    String a= t.get(0).attributes().get("onclick");
-                    String[] b=a.split("'");
-                    String topicUrl="https://mooc1-1.chaoxing.com"+b[1];
+                    Elements source = discuss.select("a");  //查找课程来源
+                    for (Element comment : source) {
+                        String sourceStyle = comment.attr("style");
+                        String replyCount = comment.attr("class");
+                        if (sourceStyle.equals("color: #fff;")) {
+                            topicSource = comment.text().substring(5);
+                        } else if (replyCount.equals("lookall")) {
+                            //获取评论数
+                            topicReplyCount = comment.text().substring(5);
+                        }
+                    }
+
 
                     //插入数据库中
-                    Example example=new Example(TopicList.class);
+                    Example example = new Example(TopicList.class);
+                    example.createCriteria().andEqualTo("topicTime", time).andEqualTo("topicName", questionerTitle);
+                    // example.createCriteria().andEqualTo("topicName",questionerTitle);
+                    List<TopicList> exercise = topicListMapper.selectByExample(example);
+                    //上面的三条语句相当于下面的查询语句
+                    // slelect count(*) from topic_list where topic_name=questionerTitle and topic_time=time
+                    TopicList topicList = new TopicList();
+                    topicList.setId(IdUtil.randomUUID());
+                    topicList.setTopicName(questionerTitle);
+                    topicList.setTopicContent(initiator);
+                    topicList.setTopicTime(time);
+                    topicList.setTopicUrl(topicUrl);
+                    topicList.setCourseId(courseId);
+                    topicList.setTopicSource(topicSource);
+                    topicList.setTopicReplyCount(topicReplyCount);
+                    //先查找评论存不存在存在则更新评论不存在则插入评论
+                    if (exercise.size()>0 && exercise!=null) {
+                        String id = null;
+                        for (TopicList topiclist : exercise) {
+                            id = topiclist.getId();
 
-                    example.createCriteria().andEqualTo("topicTime",time);
-                    example.createCriteria().andEqualTo("topicName",questionerTitle);
-                    int exercise=topicListMapper.selectCountByExample(example);
-                    if (exercise !=0){
-                        System.out.println("该讨论已存在"+j);
-                    }else {
-                        TopicList topicList=new TopicList();
+                        }
+                        topicList.setId(id);
+                        topicListMapper.updateByPrimaryKey(topicList);
+
+
+                    } else {
+                        //更新语句
                         topicList.setId(IdUtil.randomUUID());
-                        topicList.setTopicName(questionerTitle);
-                        topicList.setTopicContent(initiator);
-                        topicList.setTopicTime(time);
-                        topicList.setTopicUrl(topicUrl);
-                        topicList.setCourseId(courseId);
                         topicListMapper.insert(topicList);
-                    }
-                }
 
+                    }
+
+
+                }
             }
         }
     }
 }
+
+
