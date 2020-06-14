@@ -40,6 +40,7 @@ public class CourseFeignServiceImpl implements CourseFeignService {
      */
     @Override
     public ChromeDriver login() {
+        System.setProperty("webdriver.chrome.driver", "D:/Google/chromedriver.exe");
         //初始化浏览器
         ChromeDriver chromeDriver = new ChromeDriver();
         //打开网页

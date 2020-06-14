@@ -65,22 +65,38 @@ public class TopicDetailListServiceImpl implements TopicDetailListService {
             //判断是否有查看更多按钮
             if (ElementUtil.check(driver, allMore)) {
                 int j = 1;
+                boolean b = false;
                 for (int i = 0; i < j; i++) {
                     if (ElementUtil.check(driver, allMore)) {
-                        WebElement allMoreclick = driver.findElement(By.id("more_reply"));
-                        //点击查看更多按钮
-                        allMoreclick.click();
-                        //下拉页面到底部
-                        ((JavascriptExecutor) driver).executeScript("window.scrollTo(0,document.body.scrollHeight)");
-                        allMore = new By.ByXPath("//*[@id=\"more_reply\"]");//xpath用来定位
-                    } else {
-                        break;
+                        WebElement element = driver.findElement(By.xpath("/html"));
+                        //outerHTML:获取当前标签完整的html
+                        //innerHTML:获取元素内的全部HTML??
+                        String html = element.getAttribute("outerHTML");
+                        Document document = Jsoup.parse(html);
+                        if (b == false) {
+                            WebElement allMoreclick = driver.findElement(By.id("more_reply"));
+                            allMoreclick.click();
+                            //下拉页面到底部
+                            ((JavascriptExecutor) driver).executeScript("window.scrollTo(0,document.body.scrollHeight)");
+                            element = driver.findElement(By.xpath("/html"));
+                            Thread.sleep(4000);
+                            html = element.getAttribute("outerHTML");
+                            document = Jsoup.parse(html);
+                            Elements topic = document.select("#more_reply");
+                            b = topic.attr("style").contains("display:none;");
+                            if (b == false) {
+                                j += 1;
+                            }
+                            System.out.println("随便打印点东西");
+                        } else {
+                            break;
+                        }
                     }
                 }
-            } else {
-                //下拉到页面底部
-                ((JavascriptExecutor) driver).executeScript("window.scrollTo(0,document.body.scrollHeight)");
-            }
+                } else {
+                        //下拉到页面底部
+                        ((JavascriptExecutor) driver).executeScript("window.scrollTo(0,document.body.scrollHeight)");
+          }
             WebElement element = driver.findElement(By.xpath("/html"));
             String html = element.getAttribute("outerHTML");
             Document document = Jsoup.parse(html);
@@ -89,8 +105,8 @@ public class TopicDetailListServiceImpl implements TopicDetailListService {
             //讨论集合
             List<String> commentList = new ArrayList<String>();
             //截取url中的topicid
-            String[] b=topicListDetail.split("&");
-            String[]c= b[2].split("=");
+            String[] d=topicListDetail.split("&");
+            String[]c= d[2].split("=");
             Elements Comment = document.select("#topic_replys_"+c[1]).select("div[id]");
             for (Element comment : Comment) {
                 if (comment.attr("id").contains("plDiv_")) {
@@ -114,12 +130,32 @@ public class TopicDetailListServiceImpl implements TopicDetailListService {
 //                System.out.println(replyList + "大小：" + replyList.size());
                 //讨论发起者
                 String initiator = topicReplys.select(".name").first().text();
-//                System.out.println("发起讨论者：" + initiator);
+                //获取发起讨论的时间
+                String topicTime = topicReplys.select(".gray").first().text();
+                //获取得分数
+                String score = topicReplys.select("#reply_value_" + commentList.get(j)).select("span[id]").first().text();
+                //获取问题区的图片
+                Elements imgDiv = topicReplys.select(".smallImg.clearfix.topic").select("a").select("img");
+                System.out.println(imgDiv);
+                String img = imgDiv.attr("src");
+
+                //获得点赞数
+                //获取oneTop Div
+                Elements oneTop = topicReplys.select(".oneTop");
+                Elements classContent1 = oneTop.select(".zan.fr");
+                Elements classContent2 = oneTop.select(".zan1.fr");
+                String thumbs =null;
+                if ( classContent1.size() == 0){
+                    thumbs = classContent2.select("a").first().text();
+                }else{
+                    thumbs = classContent1.select("a").first().text();
+                }
                 //讨论标题
-                Elements topicTitle = topicReplys.select("#replyfirstname_" + commentList.get(j));
+                Elements topicTitle = topicReplys.select("#replyfirs tname_" + commentList.get(j));
                 Elements h3 = topicReplys.select("h3");
                 String className = topicReplys.select(".fl").select(".photo18").attr("title");
 //                System.out.println(className);
+                String all = (h3.text()+img).toString();
 //                System.out.println("讨论标题：" + h3.text());
                 //将讨论标题作为问题存入到topic_question库中，并去重
 
@@ -131,15 +167,13 @@ public class TopicDetailListServiceImpl implements TopicDetailListService {
                 if (exercise !=0){
                     System.out.println("该条数据已存在"+j);
                 }else {
-
-
+                    topicQuestion.setQuestionTime(topicTime);
                     topicQuestion.setId(id);
-                    topicQuestion .setQuestionContent(h3.text());
-//                topicQuestion.setQuestionTime();
+                    topicQuestion.setQuestionContent(all);
                     topicQuestion.setQuestioner(initiator);
-//                topicQuestion.setThumbsUP();
+                    topicQuestion.setThumbsUp(thumbs);
                     topicQuestion.setTopicId(topicId);
-//                topicQuestion.setScore();
+                    topicQuestion.setScore(score);
                     topicQuestionMapper.insert(topicQuestion);
                 }
 
@@ -166,6 +200,10 @@ public class TopicDetailListServiceImpl implements TopicDetailListService {
 //                        System.out.println("回复消息 :" + replyContent);
                         //截取回复日期
 //                        System.out.println("回复日期：" + getLastString(replyPeoples, 11));
+                        //获取评论区回复的图片内容
+                        Elements replyImgDiv = topicReplys.select(".chooseImg.clearfix.smallImg.secondreply").select("a").select("img");
+                        String replyImg = replyImgDiv.attr("src");
+                        String allReply = (replyContent + replyImg).toString();
 
                         //去重并存表
                         Example exampleRe=new Example(TopicReply.class);
@@ -182,7 +220,7 @@ public class TopicDetailListServiceImpl implements TopicDetailListService {
                             topicReply.setQuestionId(topicQuestion.getId());
                             topicReply.setReplied(respondent);
                             topicReply.setReplyName(replyPeople);
-                            topicReply.setReplyContent(replyContent);
+                            topicReply.setReplyContent(allReply);
                             topicReply.setReplyTim(time);
                             topicDetailListMapper.insert(topicReply);
                         }
