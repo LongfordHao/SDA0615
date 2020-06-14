@@ -41,10 +41,14 @@ public class IntegralServiceImpl implements IntegralService {
         //设定好的关键字
         String questionItem= PropertiesUtil.getValue("topicQuestion");//{"hahah","shahhs"};//配置文件中的关键字
         String[] questionItems=questionItem.split(",");
-        //***检查主题中有没有关键字，含有几个关键字，包含一个关键字加一分
+        //每个关键字的分数
+        String questionFraction= PropertiesUtil.getValue("questionFraction");
+        //基础分数
+        String fraction= PropertiesUtil.getValue("fraction");
+        //***检查主题中有没有关键字，含有几个关键字
         int questionIntegral=containsWords(questionContent,questionItems);
         //只要有回复就有一个基础分
-        String sumIntegral= String.valueOf(questionIntegral+1);
+        String sumIntegral= String.valueOf(questionIntegral*Integer.parseInt(questionFraction)+Integer.parseInt(fraction));
         return sumIntegral;
     }
 
@@ -60,9 +64,24 @@ public class IntegralServiceImpl implements IntegralService {
     private String topicRplyAdd(String replyContent){
         //设定好的关键字
         String replyItem= PropertiesUtil.getValue("topicReply");//{"解决","感谢"};//配置文件中的关键字
+
+
+        String replyFraction= PropertiesUtil.getValue("replyFraction");
         String[] replyItems=replyItem.split(",");
-        //***检查主题中有没有关键字，含有几个关键字，包含一个关键字加一分
-        int replyIntegral=containsWords(replyContent,replyItems);
+        //***检查主题中有没有关键字，含有几个关键字
+        int replyIntegral=containsWords(replyContent,replyItems)+Integer.parseInt(replyFraction);
+        return String.valueOf(replyIntegral);
+    }
+
+    private String topicRplyTwoAdd(String replyContent){
+        //设定好的关键字
+        String replyItem= PropertiesUtil.getValue("topicReplyTwo");//配置文件中的关键字
+
+
+        String replyFraction= PropertiesUtil.getValue("replyTwoFraction");
+        String[] replyItems=replyItem.split(",");
+        //***检查主题中有没有关键字，含有几个关键字
+        int replyIntegral=containsWords(replyContent,replyItems)+Integer.parseInt(replyFraction);
         return String.valueOf(replyIntegral);
     }
 
@@ -75,15 +94,19 @@ public class IntegralServiceImpl implements IntegralService {
         //设定好的视频格式
         String videoTem= PropertiesUtil.getValue("topicVideo");
         String[] videoTems=videoTem.split(",");
-        int replyIntegral=containsWords(voideoContent,videoTems);
+        //每个视频加的分数
+        String videoFraction= PropertiesUtil.getValue("videoFraction");
+        int replyIntegral=containsWords(voideoContent,videoTems)*Integer.parseInt(videoFraction);
         return  String.valueOf(replyIntegral);
     }
 
     private  String pictureAdd(String pictureContent){
-        //设定好的视频格式
+        //设定好的图片格式
         String pictureTem= PropertiesUtil.getValue("topicPicture");
         String[] pictureTems=pictureTem.split(",");
-        int replyIntegral=containsWords(pictureContent,pictureTems);
+        //每个图片加分
+        String pictureFraction= PropertiesUtil.getValue("pictureFraction");
+        int replyIntegral=containsWords(pictureContent,pictureTems)*Integer.parseInt(pictureFraction);
         return  String.valueOf(replyIntegral);
     }
 
@@ -119,35 +142,58 @@ public class IntegralServiceImpl implements IntegralService {
             String topContent="";
             //被加分人姓名
             String integralName=topicQustion.getQuestioner();
+            String topicTime=topicQustion.getQuestionTime();
             for (TopicReply topicreply:topicReplies) {
                 topContent = topicreply.getReplyContent();
                 integralName=topicreply.getReplied();
+                topicTime=topicreply.getReplyTim();
+                //**************************给单人加分******************************
                 //给问题标题下的讨论回复解决问题的人加分
                 String topicReplyIntegral=topicRplyAdd(topContent);
                 String topicReplyRemarks= PropertiesUtil.getValue("topicReplyRemarks");
-                if (topicReplyIntegral!="0"){
-                    insterInto(topicQustion,topicReplyIntegral,topicReplyRemarks,integralName);
+                //是否启用此加分规则
+                String topicReplyOn= PropertiesUtil.getValue("topicReplyOn");
+                if (topicReplyIntegral!="0" && topicReplyOn !="0"){
+                    insterInto(topicQustion,topicReplyIntegral,topicReplyRemarks,integralName,topicTime);
                 }
+                //********************************给两人加分**********************************
 
+                //给问题标题下的讨论回复解决问题的人加分
+                String topicReplyTwoIntegral=topicRplyAdd(topContent);
+                String topicReplyTwoRemarks= PropertiesUtil.getValue("topicReplyTwoRemarks");
+                //是否启用此加分规则
+                String topicReplyTwoOn= PropertiesUtil.getValue("topicReplyTwoOn");
+                if (topicReplyIntegral!="0" && topicReplyTwoOn !="0"){
+
+                    insterInto(topicQustion,topicReplyTwoIntegral,topicReplyTwoRemarks,integralName,topicTime);
+                    integralName=topicreply.getReplyName();
+                    insterInto(topicQustion,topicReplyTwoIntegral,topicReplyTwoRemarks,integralName,topicTime);
+                }
             }
             //将问题标题中的关键字进行加分
             String questionIntegral= topicQuestionAdd(questionContent);
             String questionRemarks= PropertiesUtil.getValue("topicQuestionRemarks");
-            if (questionIntegral!="0"){
-                insterInto(topicQustion,questionIntegral,questionRemarks,integralName);
+            //是否启用此加分规则
+            String topicQuestionOn= PropertiesUtil.getValue("topicQuestionOn");
+            if (questionIntegral!="0" && topicQuestionOn !="0"){
+                insterInto(topicQustion,questionIntegral,questionRemarks,integralName,topicTime);
             }
 
             //给话题下的回复添加视频加分
             String topicVideoIntegral=videoAdd(topContent);
             String topicVideoRemarks= PropertiesUtil.getValue("topicVideoRemarks");
-            if (topicVideoIntegral!="0") {
-                insterInto(topicQustion, topicVideoIntegral, topicVideoRemarks, integralName);
+            //是否启用此加分规则
+            String topicVideoOn= PropertiesUtil.getValue("topicVideoOn");
+            if (topicVideoIntegral!="0" && topicVideoOn!="0") {
+                insterInto(topicQustion, topicVideoIntegral, topicVideoRemarks, integralName,topicTime);
             }
             //给话题下的回复添加图片加分
             String topicPictureIntegral=pictureAdd(topContent);
             String topicPictureRemarks= PropertiesUtil.getValue("topicPictureRemarks");
-            if (topicPictureIntegral!="0"){
-                insterInto(topicQustion,topicPictureIntegral,topicPictureRemarks,integralName);
+            //是否启用此加分规则
+            String topicPictureOn= PropertiesUtil.getValue("topicPictureOn");
+            if (topicPictureIntegral!="0" && topicPictureOn!="0"){
+                insterInto(topicQustion,topicPictureIntegral,topicPictureRemarks,integralName,topicTime);
             }
         }
     }
@@ -159,7 +205,7 @@ public class IntegralServiceImpl implements IntegralService {
      * @param remarks 备注
      * @param integralName 加分人的姓名
      */
-    private void  insterInto(TopicQuestion topicQustion,String integral,String remarks,String integralName){
+    private void  insterInto(TopicQuestion topicQustion,String integral,String remarks,String integralName,String topicTime){
         //查询课程id，并通过课程id来获取学生的学号
         //***通过questionid获取topic_list的外键就是course的id
         Example example=new Example(TopicList.class);
@@ -168,25 +214,35 @@ public class IntegralServiceImpl implements IntegralService {
         //通过课程id和用户姓名来确定用户的学号（前提是同一个班里没有同名的学生）
         Example userInfo=new Example(UserInfo.class);
         userInfo.createCriteria().andEqualTo("courseId",topicId.getCourseId()).andEqualTo("name",topicQustion.getQuestioner());
-        UserInfo userinfoSecl=userInfoMapper.selectOneByExample(userInfo);
-        if (userinfoSecl!=null){
+        List<UserInfo> userinfoSecl=userInfoMapper.selectByExample(userInfo);
+
+        //最高加15分
+        if (Integer.parseInt(integral)>15){
+            integral="15";
+        }
+        if (userinfoSecl.size()!=0){
             //判断将要插入的数据库中没有
             Example exampleIn=new Example(Integral.class);
-            exampleIn.createCriteria().andEqualTo("topicId",topicQustion.getId());
-            exampleIn.createCriteria().andEqualTo("stuNumber",userinfoSecl.getStudentNumber());
-            int exercise=integralMapper.selectCountByExample(exampleIn);
-            if (exercise!=0){
-                System.out.println("该讨论已经加分");
-            }else {
-                //将数据插入到加分表中
+            exampleIn.createCriteria().andEqualTo("topicId",topicQustion.getId()).andEqualTo("stuNumber",userinfoSecl.get(0).getStudentNumber()).andEqualTo("topicTime",topicTime);
+            List<Integral> exercise=integralMapper.selectByExample(exampleIn);
                 Integral integralIn=new Integral();
                 integralIn.setId(IdUtil.randomUUID());
                 integralIn.setIntegral(integral);
                 integralIn.setName(integralName);
-                integralIn.setStuNumber(userinfoSecl.getStudentNumber());
+            integralIn.setStuNumber(userinfoSecl.get(0).getStudentNumber());
                 integralIn.setTopicId(topicQustion.getId());//这个id与话题底下的讨论问题相对应
                 integralIn.setRemarks(remarks);//备注
+            integralIn.setTopicTime(topicTime);
+            if (exercise.size()!=0){
+                for (Integral integralup:exercise) {
+                    integralMapper.updateByPrimaryKey(integralup);
+                    System.out.println("该讨论加分已更新");
+                }
+
+            }else {
+                //将数据插入到加分表中
                 integralMapper.insert(integralIn);
+                System.out.println("已加分");
             }
         }else {
             System.out.println("数据库中没有这个学生");

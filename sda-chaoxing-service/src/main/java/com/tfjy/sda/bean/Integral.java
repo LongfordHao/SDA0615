@@ -28,4 +28,6 @@ public class Integral implements Serializable {
     private String topicId;
     @Column
     private String remarks;
+    @Column
+    private String topicTime;
 }
