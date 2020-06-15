@@ -40,7 +40,7 @@ public class CourseFeignServiceImpl implements CourseFeignService {
      */
     @Override
     public ChromeDriver login() {
-        System.setProperty("webdriver.chrome.driver", "D:/Google/chromedriver.exe");
+        //System.setProperty("webdriver.chrome.driver", "D:/Google/chromedriver.exe");
         //初始化浏览器
         ChromeDriver chromeDriver = new ChromeDriver();
         //打开网页
@@ -79,7 +79,7 @@ public class CourseFeignServiceImpl implements CourseFeignService {
      * @date: 2020/6/4 14:49
      */
     @Override
-    public void homePage() {
+    public String homePage() {
         ChromeDriver driver = login();
         String curriculumUrl = PropertiesUtil.getValue("curriculum.url");
         //进入首页
@@ -131,5 +131,6 @@ public class CourseFeignServiceImpl implements CourseFeignService {
             }
         }
         driver.close();
+        return null;
     }
 }
