@@ -1,6 +1,8 @@
 package com.tfjy.sda.bean;
 
 
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
 import javax.persistence.Column;
@@ -15,16 +17,37 @@ import java.io.Serializable;
  * @date: 2020/6/4 16:50
  */
 @Data
+@ApiModel(value = "Course：课程表")
 public class Course implements Serializable {
+    /**
+     * 主键ID
+     */
     @Id
     @Column
-    private String Id;//主键ID
+    @ApiModelProperty(value = "主键ID")
+    private String Id;
+    /**
+     * 课程名称
+     */
     @Column
-    private String courseName;//课程名称
+    @ApiModelProperty(value = "课程名称")
+    private String courseName;
+    /**
+     * 任课老师
+     */
     @Column
-    private String courseTeacher;//任课老师
+    @ApiModelProperty(value = "任课老师")
+    private String courseTeacher;
+    /**
+     * 课程备注
+     */
     @Column
-    private String courseExplain;//课程备注
+    @ApiModelProperty(value = "课程备注")
+    private String courseExplain;
+    /**
+     * 课程链接
+     */
     @Column
-    private String courseUrl;//课程链接
+    @ApiModelProperty(value = "课程链接")
+    private String courseUrl;
 }

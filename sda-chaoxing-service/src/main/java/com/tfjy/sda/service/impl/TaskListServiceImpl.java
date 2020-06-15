@@ -105,6 +105,14 @@ public class TaskListServiceImpl implements TaskListService {
             //获取li标签内容
             Elements taskli = ultask.getElementsByTag("li");
             for (Element litask : taskli) {
+
+                TaskList taskList = new TaskList();
+                //判断作业是否为学生互评
+                if (litask.select(".huping").size()>0){
+                    taskList.setTaskType("互评");
+                }else {
+                    taskList.setTaskType(null);
+                }
                 if (litask.select(".titTxt").attr("class").equals("titTxt")){
                     String taskName = litask.select(".titTxt").select("p").select("a").text();
                     System.out.println("作业名称："+taskName);
@@ -126,22 +134,31 @@ public class TaskListServiceImpl implements TaskListService {
                     criteria.andEqualTo("taskName",taskName);
                     criteria.andEqualTo("startTime",startTime);
                     int taskNum = taskListMapper.selectCountByExample(example);
-                    if (taskNum!=0){
+                    List<TaskList> taskLists = taskListMapper.selectByExample(example);
+                    //添加实体参数
+                    taskList.setId(IdUtil.randomUUID());
+                    taskList.setTaskName(taskName);
+                    taskList.setStartTime(startTime);
+                    taskList.setStopTime(stopTime);
+                    taskList.setMutualTime(mutualTime);
+                    taskList.setSubmitNum(submitNum);
+                    taskList.setPendingNum(pendingNum);
+                    taskList.setTaskUrl(taskUrl);
+                    taskList.setCourseId(courseId);
+                    if (taskLists.size()>0 && taskLists!=null){
+                        String taskId=null;
+                        for (TaskList list : taskLists) {
+                            //获取作业id
+                            taskId=list.getId();
+                        }
+                        //更新记录
+                        taskList.setId(taskId);
+                        taskListMapper.updateByPrimaryKey(taskList);
                         System.out.println("该作业已存在，请勿重复添加");
                     }else {
-                        //作业不存在添加记录
-                        TaskList taskList = new TaskList();
-                        taskList.setId(IdUtil.randomUUID());
-                        taskList.setTaskName(taskName);
-                        taskList.setStartTime(startTime);
-                        taskList.setStopTime(stopTime);
-                        taskList.setMutualTime(mutualTime);
-                        taskList.setSubmitNum(submitNum);
-                        taskList.setPendingNum(pendingNum);
-                        taskList.setTaskUrl(taskUrl);
-                        taskList.setCourseId(courseId);
+                        //添加新记录
                         taskListMapper.insert(taskList);
-                        System.out.println("添加课程成功");
+                        System.out.println("添加作业成功");
                     }
                 }
             }

@@ -34,4 +34,6 @@ public class TaskList implements Serializable {
     private String taskUrl;
     @Column
     private  String courseId;
+    @Column
+    private String taskType;
 }
