@@ -177,6 +177,19 @@ public class TopicListServiceImpl implements TopicListService {
             }
         }
     }
+
+    /**
+     * 根据课程id查询课程下的讨论列表
+     * @param courseId 课程id
+     * @return 讨论列表
+     */
+    @Override
+    public List questTopicList(String courseId){
+        Example example=new Example(TopicList.class);
+        example.createCriteria().andEqualTo("courseId",courseId);
+        List<TopicList> topicLists=topicListMapper.selectByExample(example);
+        return topicLists;
+    }
 }
 
 

@@ -3,6 +3,8 @@ package com.tfjy.sda.service;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
+
 /**
  * Author: LangFordHao
  * Version:
@@ -15,4 +17,5 @@ import org.springframework.stereotype.Component;
 public interface TopicListService {
     //获取讨论列表
     void getTopicList() throws InterruptedException;
+    List questTopicList(String courseId);
 }

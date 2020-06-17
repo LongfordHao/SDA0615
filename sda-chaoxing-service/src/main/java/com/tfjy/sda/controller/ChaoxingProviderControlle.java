@@ -110,4 +110,9 @@ public class ChaoxingProviderControlle {
         taskDetailService.getTaskDetailList();
     }
 
+    @ApiOperation(value="获取讨论列表内容")
+    @GetMapping("/questTopicList")
+    public List  questTopicList(@RequestParam("courseId") String courseId){
+        return topicListService.questTopicList(courseId);
+    }
 }
