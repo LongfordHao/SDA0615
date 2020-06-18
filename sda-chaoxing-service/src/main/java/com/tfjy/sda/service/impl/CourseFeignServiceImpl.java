@@ -16,6 +16,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import tk.mybatis.mapper.entity.Example;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 /*
  * @ClassName: CourseFeignServiceImpl
@@ -42,6 +44,7 @@ public class CourseFeignServiceImpl implements CourseFeignService {
     public ChromeDriver login() {
         //System.setProperty("webdriver.chrome.driver", "D:/Google/chromedriver.exe");
         //初始化浏览器
+        System.setProperty("webdriver.chrome.driver","");
         ChromeDriver chromeDriver = new ChromeDriver();
         //打开网页
         String login = PropertiesUtil.getValue("chaoxing.login");
@@ -132,5 +135,19 @@ public class CourseFeignServiceImpl implements CourseFeignService {
         }
         driver.close();
         return null;
+    }
+
+    @Override
+    public List queryCourse() {
+        List<Course> courses = courseMapper.selectAll();
+        List courseList = new ArrayList<>();
+        int num=100;
+        for (Course cours : courses) {
+            HashMap<String, String> courseMap = new HashMap<>();
+            courseMap.put("courseName",cours.getCourseName());
+            courseMap.put("id",String.valueOf(num=num+1));
+            courseList.add(courseMap);
+        }
+        return courseList;
     }
 }

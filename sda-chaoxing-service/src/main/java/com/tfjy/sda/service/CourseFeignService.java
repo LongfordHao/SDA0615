@@ -3,6 +3,8 @@ package com.tfjy.sda.service;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.stereotype.Component;
+
+import java.util.List;
 /*
  * @ClassName: CourseFeignService
  * @description TODO
@@ -19,4 +21,6 @@ public interface CourseFeignService {
     ChromeDriver login();
     //获取课程首页信息
     String homePage();
+    //获取课程信息
+    List queryCourse();
 }

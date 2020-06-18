@@ -3,11 +3,13 @@ package com.tfjy.sda.controller;
 import com.tfjy.sda.bean.Topic;
 import com.tfjy.sda.bean.TopicUrlModel;
 import com.tfjy.sda.service.*;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
+//import io.swagger.annotations.Api;
+//import io.swagger.annotations.ApiOperation;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 /*
@@ -17,8 +19,8 @@ import java.util.List;
  * @author: 张兴军
  * @date: 2020/6/1 21:01
  */
-
-@Api(tags = {"学习通模块接口"})
+@CrossOrigin
+//@Api(tags = {"学习通模块接口"})
 @RequestMapping(value = "/chaoxing")
 @RestController
 public class ChaoxingProviderControlle {
@@ -40,33 +42,31 @@ public class ChaoxingProviderControlle {
     private IntegralService integralService;
     @Resource
     private TopicIntegralListService topicIntegralListService;
-    @Resource
-    private TaskDetailService taskDetailService;
 
     @GetMapping("/all")
     public List<Topic> queryAll(){
-        return topicFeignService.queryAll();
+       return topicFeignService.queryAll();
     }
     @GetMapping("/test")
     public String queryTest(){
         return this.topicFeignService.queryTest();
     }
-    @ApiOperation(value = "登录")
+//    @ApiOperation(value = "登录")
     @GetMapping("/login")
     public void login(){
         courseFeignService.login();
     }
-     @ApiOperation(value = "获取首页课程")
+//    @ApiOperation(value = "获取首页课程")
     @GetMapping("/home")
     public void homePage(){
         courseFeignService.homePage();
     }
-    @ApiOperation(value = "获取课程活动")
+//    @ApiOperation(value = "获取课程活动")
     @GetMapping("/exercise")
     public void  getexercise(){
         courseExerciseService.getexercise();
     }
-    @ApiOperation(value = "获取讨论列表")
+//    @ApiOperation(value = "获取讨论列表")
     @GetMapping("/topicList")
     public void  getTopicList(){
         try {
@@ -75,18 +75,18 @@ public class ChaoxingProviderControlle {
             e.printStackTrace();
         }
     }
-    @ApiOperation(value = "获取作业列表")
+//    @ApiOperation(value = "获取作业列表")
     @GetMapping("/taskList")
     public void getTaskList(){
         taskListService.getTaskList();
     }
-    @ApiOperation(value = "获取作业统计")
+//    @ApiOperation(value = "获取作业统计")
     @GetMapping("task")
     public void getTask(){
         taskStatisticsService.getTask();
     }
-    @ApiOperation(value="获取讨论话题的问题列表和讨论详情列表")
-    @GetMapping("topicDetailList")
+    //@ApiOperation(value="获取讨论话题的问题列表和讨论详情列表")
+    @RequestMapping("topicDetailList")
     private void  getDetailList()  {
         try {
             topicDetailListService.getDetailList();
@@ -94,25 +94,19 @@ public class ChaoxingProviderControlle {
             e.printStackTrace();
         }
     }
-    @ApiOperation(value="添加提问问题积分")
+
     @GetMapping("integralQuestionAdd")
     public void  integralQuestrionAdd(){
         integralService.getIntegralInto();
     }
-    @ApiOperation(value="查询积分表信息")
+
     @PostMapping("queryIntegralList" )
     public  List queryIntegralList(@RequestBody TopicUrlModel topicUrl){
         return topicIntegralListService.queryIntegralList(topicUrl);
     }
-    @ApiOperation(value="获取作业详情内容")
-    @GetMapping("/getTaskDetailList")
-    public void  getTaskDetailList(){
-        taskDetailService.getTaskDetailList();
+    @GetMapping("/queryCourse")
+    public List queryCourse(){
+      return  courseFeignService.queryCourse();
     }
 
-    @ApiOperation(value="获取讨论列表内容")
-    @GetMapping("/questTopicList")
-    public List  questTopicList(@RequestParam("courseId") String courseId){
-        return topicListService.questTopicList(courseId);
-    }
 }
