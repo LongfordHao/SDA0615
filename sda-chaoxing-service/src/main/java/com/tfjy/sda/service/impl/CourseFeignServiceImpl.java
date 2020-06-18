@@ -141,11 +141,10 @@ public class CourseFeignServiceImpl implements CourseFeignService {
     public List queryCourse() {
         List<Course> courses = courseMapper.selectAll();
         List courseList = new ArrayList<>();
-        int num=100;
         for (Course cours : courses) {
             HashMap<String, String> courseMap = new HashMap<>();
             courseMap.put("courseName",cours.getCourseName());
-            courseMap.put("id",String.valueOf(num=num+1));
+            courseMap.put("id",cours.getId());
             courseList.add(courseMap);
         }
         return courseList;
