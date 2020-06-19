@@ -1,6 +1,9 @@
 package com.tfjy.sda.service.impl;
 
 import cn.hutool.core.util.IdUtil;
+import cn.hutool.db.PageResult;
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
 import com.tfjy.sda.bean.*;
 import com.tfjy.sda.mapper.*;
 import com.tfjy.sda.service.IntegralService;
@@ -8,7 +11,9 @@ import com.tfjy.sda.util.PropertiesUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import tk.mybatis.mapper.entity.Example;
+import tk.mybatis.mapper.common.Mapper;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -161,7 +166,7 @@ public class IntegralServiceImpl implements IntegralService {
                 //********************************给两人加分**********************************
 
                 //给问题标题下的讨论回复解决问题的人加分
-                String topicReplyTwoIntegral=topicRplyAdd(topContent);
+                String topicReplyTwoIntegral=topicRplyTwoAdd(topContent);
                 String topicReplyTwoRemarks= PropertiesUtil.getValue("topicReplyTwoRemarks");
                 //是否启用此加分规则
                 String topicReplyTwoOn= PropertiesUtil.getValue("topicReplyTwoOn");
@@ -257,6 +262,59 @@ public class IntegralServiceImpl implements IntegralService {
         }else {
             System.out.println("数据库中没有这个学生");
         }
+
+    }
+
+    /**
+     * 根据话题id查询此话题下的所有加分学生
+     * @param topicId
+     * @return
+     */
+    @Override
+    public List questIntegralList(String topicId){
+        //先查出话题下的所有问题
+        Example example=new Example(TopicQuestion.class);
+        example.createCriteria().andEqualTo("topicId",topicId);
+        List<TopicQuestion> topicQuestions=topicQuestionMapper.selectByExample(example);
+        //遍历问题id查询加分人员
+        List integralList=new ArrayList();
+        for (TopicQuestion topicQuest:topicQuestions) {
+            Example exampleIntegral=new Example(Integral.class);
+            example.createCriteria().andEqualTo("topicId",topicQuest.getId());
+            List<Integral> integrals=integralMapper.selectByExample(exampleIntegral);
+            integralList.addAll(integrals);
+        }
+        //分页
+        PageHelper.startPage(1, 10);
+        //取分页信息
+        PageInfo<Integral> pageInfo=new PageInfo<Integral>(integralList);
+        return integralList;
+    }
+
+    @Override
+    public Object questIntegralListPage(String topicId, int page){
+
+        //先查出话题下的所有问题
+        Example example=new Example(TopicQuestion.class);
+        example.createCriteria().andEqualTo("topicId",topicId);
+        List<TopicQuestion> topicQuestions=topicQuestionMapper.selectByExample(example);
+        //遍历问题id查询加分人员
+        List integralList=new ArrayList();
+
+        for (TopicQuestion topicQuest:topicQuestions) {
+            Example exampleIntegral=new Example(Integral.class);
+            exampleIntegral.createCriteria().andEqualTo("topicId",topicQuest.getId());
+            List<Integral> integrals=integralMapper.selectByExample(exampleIntegral);
+            integralList.addAll(integrals);
+            System.out.println(topicQuest.getId());
+
+        }
+        //分页
+        PageHelper.startPage(1, 5);
+        //取分页信息
+        PageInfo<Integral> pageInfo=new PageInfo<>(integralList);
+        long a=pageInfo.getTotal();
+        return pageInfo;
 
     }
 }

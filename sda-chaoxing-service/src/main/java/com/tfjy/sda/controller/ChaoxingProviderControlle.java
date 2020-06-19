@@ -3,13 +3,11 @@ package com.tfjy.sda.controller;
 import com.tfjy.sda.bean.Topic;
 import com.tfjy.sda.bean.TopicUrlModel;
 import com.tfjy.sda.service.*;
-//import io.swagger.annotations.Api;
-//import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 /*
@@ -109,4 +107,15 @@ public class ChaoxingProviderControlle {
       return  courseFeignService.queryCourse();
     }
 
+    @ApiOperation(value="获取话题下学生加分列表内容")
+    @GetMapping("/questIntegralList")
+    public List  questIntegralList(@RequestParam("topicId") String topicId){
+        return integralService.questIntegralList(topicId);
+    }
+
+    @ApiOperation(value="获取话题下学生加分列表内容分页")
+    @GetMapping("/questIntegralListPage")
+    public Object  questIntegralListPage(@RequestParam("topicId") String topicId,@RequestParam("page") int page){
+        return integralService.questIntegralListPage(topicId,page);
+    }
 }
