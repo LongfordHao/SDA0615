@@ -124,4 +124,16 @@ public class ChaoxingProviderControlle {
     public List  questTopicList(@RequestParam("courseId") String courseId){
         return topicListService.questTopicList(courseId);
     }
+
+    @ApiOperation(value = "课程下所有加分学生的信息")
+    @GetMapping("/questCourseIntegralListPage")
+    public Object questCourseIntegralListPage(@RequestParam("courseId") String courseId,@RequestParam("page") int page,@RequestParam("size") int size){
+        return integralService.questCourseIntegralListPage(courseId,page,size);
+    }
+
+    @ApiOperation(value = "学生的加分成绩折线图")
+    @GetMapping("/questStudentIntegral")
+    public List questStudentIntegral (String studentNo){
+        return integralService.questStudentIntegrall(studentNo);
+    }
 }

@@ -27,5 +27,27 @@ public interface IntegralService {
      */
     List questIntegralList(String topicId);
 
+    /**
+     * 根据话题id查询话题下所有学生的信息，分页
+     * @param topicId
+     * @param page
+     * @return
+     */
     Object questIntegralListPage(String topicId, int page);
+
+    /**
+     * 课程下所有加分学生的信息
+     * @param courseId
+     * @param page
+     * @param size
+     * @return
+     */
+    Object questCourseIntegralListPage(String courseId,int page ,int size);
+
+    /**
+     * 学生的加分成绩折线图
+     * @param studentNO
+     * @return
+     */
+    List questStudentIntegrall (String studentNO);
 }

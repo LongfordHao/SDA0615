@@ -291,6 +291,12 @@ public class IntegralServiceImpl implements IntegralService {
         return integralList;
     }
 
+    /**
+     *
+     * @param topicId
+     * @param page
+     * @return
+     */
     @Override
     public Object questIntegralListPage(String topicId, int page){
 
@@ -313,8 +319,60 @@ public class IntegralServiceImpl implements IntegralService {
         PageHelper.startPage(1, 5);
         //取分页信息
         PageInfo<Integral> pageInfo=new PageInfo<>(integralList);
-        long a=pageInfo.getTotal();
         return pageInfo;
 
+    }
+
+    /**
+     * 查询课程下所有学生的加分情况，并分页
+     * @param courseId
+     * @param page
+     * @param size
+     * @return
+     */
+    @Override
+    public Object questCourseIntegralListPage(String courseId,int page ,int size){
+
+        //根据课程id查出所有的课程
+        Example exampleCourse=new Example(Course.class);
+        exampleCourse.createCriteria().andEqualTo("courseId",courseId);
+        List<TopicList> topicLists=topicListMapper.selectByExample(exampleCourse);
+        List integralLists=new ArrayList();
+        for (TopicList topicList:topicLists) {
+            String topicId=topicList.getId();
+            //先查出话题下的所有问题
+            Example example=new Example(TopicQuestion.class);
+            example.createCriteria().andEqualTo("topicId",topicId);
+            List<TopicQuestion> topicQuestions=topicQuestionMapper.selectByExample(example);
+            //遍历问题id查询加分人员
+            List integralList=new ArrayList();
+
+            for (TopicQuestion topicQuest:topicQuestions) {
+                Example exampleIntegral=new Example(Integral.class);
+                exampleIntegral.createCriteria().andEqualTo("topicId",topicQuest.getId());
+                List<Integral> integrals=integralMapper.selectByExample(exampleIntegral);
+                integralList.addAll(integrals);
+            }
+            integralLists.addAll(integralList);
+
+        }
+        //分页
+        PageHelper.startPage(page, size);
+        //取分页信息
+        PageInfo<Integral> pageInfo=new PageInfo<>(integralLists);
+        return pageInfo;
+    }
+
+    /**
+     * 查询学生的加分情况，折线图使用
+     * @param studentNO
+     * @return
+     */
+    @Override
+    public List questStudentIntegrall (String studentNO){
+        Example exampleIntegral=new Example(Integral.class);
+        exampleIntegral.createCriteria().andEqualTo("stuNumber",studentNO);
+        List<Integral> integrals=integralMapper.selectByExample(exampleIntegral);
+        return integrals;
     }
 }
