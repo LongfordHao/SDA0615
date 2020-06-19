@@ -118,4 +118,10 @@ public class ChaoxingProviderControlle {
     public Object  questIntegralListPage(@RequestParam("topicId") String topicId,@RequestParam("page") int page){
         return integralService.questIntegralListPage(topicId,page);
     }
+
+    @ApiOperation(value="获取讨论列表内容")
+    @GetMapping("/questTopicList")
+    public List  questTopicList(@RequestParam("courseId") String courseId){
+        return topicListService.questTopicList(courseId);
+    }
 }
