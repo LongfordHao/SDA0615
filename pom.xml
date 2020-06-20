@@ -46,7 +46,7 @@
         <!--selenium-->
         <selenium.version>3.4.0</selenium.version>
         <!--htmlunit-->
-        <htmlunit.version>2.29</htmlunit.version>
+        <htmlunit.version>2.37.0</htmlunit.version>
     </properties>
 
     <dependencyManagement>
